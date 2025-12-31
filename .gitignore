@@ -1,0 +1,114 @@
+# ================================
+# Python
+# ================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ================================
+# Jupyter / Notebooks
+# ================================
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# ================================
+# PyTorch / AI / ML
+# ================================
+# Model checkpoints & weights
+#*.pt
+#*.pth
+#*.ckpt
+#*.onnx
+#*.pb
+
+# Training logs
+logs/
+runs/
+wandb/
+mlruns/
+tensorboard/
+tb_logs/
+
+# ================================
+# Datasets (keep empty dirs with .gitkeep)
+# ================================
+#data/
+#datasets/
+#dataset/
+#raw_data/
+#processed_data/
+
+# Large files
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# ================================
+# Experiment outputs
+# ================================
+outputs/
+results/
+predictions/
+inference_outputs/
+
+# ================================
+# Config & Secrets
+# ================================
+.env
+.env.*
+secrets.yaml
+secrets.json
+config.local.yaml
+config.local.json
+
+# ================================
+# IDEs & Editors
+# ================================
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# ================================
+# OS files
+# ================================
+.DS_Store
+Thumbs.db
+
+# ================================
+# Logs & temp
+# ================================
+*.log
+*.tmp
+*.bak
+
+# ================================
+# Caches
+# ================================
+.cache/
+pytest_cache/
+.mypy_cache/
+.pytest_cache/
+
+# ================================
+# CUDA / Compiled Extensions
+# ================================
+*.so
+*.dll
+*.dylib
