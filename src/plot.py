@@ -1,14 +1,18 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import math
 
+from PIL import Image
 
-def plot_train_and_validation_error(epochs, training_loss, validation_loss):
+
+def plot_train_and_validation_error(epochs, training_loss, validation_loss, figsize=(10, 4)):
     if len(epochs) == 0:
         print("No metrics to plot.")
     else:
-        plt.figure(figsize=(8, 5))
+        plt.figure(figsize=figsize)
         plt.plot(epochs, training_loss, marker='o', label="Training Loss")
         plt.plot(epochs, validation_loss, marker='s', label="Validation Loss")
 
@@ -19,11 +23,12 @@ def plot_train_and_validation_error(epochs, training_loss, validation_loss):
         plt.legend()
         plt.show()
 
-def plot_dice_and_iou(epochs, dice_scores, iou_scores):
+
+def plot_dice_and_iou(epochs, dice_scores, iou_scores, figsize=(10, 4)):
     if len(epochs) == 0:
         print("No metrics to plot.")
     else:
-        plt.figure(figsize=(8, 5))
+        plt.figure(figsize=figsize)
         plt.plot(epochs, dice_scores, marker='o', label="Dice Score")
         plt.plot(epochs, iou_scores, marker='s', label="IoU Score")
 
@@ -34,6 +39,7 @@ def plot_dice_and_iou(epochs, dice_scores, iou_scores):
         plt.grid(True)
         plt.legend()
         plt.show()
+
 
 def plot_confusion_matrices2(epochs, cms, figsize_per_matrix=(3, 3)):
     """
@@ -74,7 +80,8 @@ def plot_confusion_matrices2(epochs, cms, figsize_per_matrix=(3, 3)):
     plt.tight_layout()
     plt.show()
 
-def plot_all_roc_curves(epochs, fprs, tprs, aucs, figsize=(10, 8)):
+
+def plot_all_roc_curves(epochs, fprs, tprs, aucs, figsize=(10, 5)):
     """
     Plot all ROC curves in one graph for multiple epochs.
     """
@@ -95,4 +102,23 @@ def plot_all_roc_curves(epochs, fprs, tprs, aucs, figsize=(10, 8)):
     ncol = 2 if len(epochs) <= 10 else 3
     plt.legend(loc="lower right", fontsize="small", ncol=ncol)
     plt.grid(True)
+    plt.show()
+
+
+def show_predicted_images(image_folder):
+    # Get list of images in the folder
+    image_files = [f for f in os.listdir(image_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
+    # Take first 3 images
+    image_files = image_files[:3]
+
+    # Display images stacked vertically (1 column, 3 rows)
+    fig, axes = plt.subplots(len(image_files), 1, figsize=(10, 7))
+    for ax, img_file in zip(axes, image_files):
+        img = Image.open(os.path.join(image_folder, img_file))
+        ax.imshow(img)
+        ax.set_title(img_file)
+        ax.axis('off')
+
+    plt.tight_layout()
     plt.show()

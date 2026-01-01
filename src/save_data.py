@@ -112,7 +112,7 @@ def load_metrics_summary(folder="metrics", filename="metrics_summary.csv"):
 
     if not os.path.exists(summary_csv):
         print(f"No metrics summary found at {summary_csv}")
-        return epochs, dice_scores, iou_scores
+        return epochs, training_losses, validation_losses, dice_scores, iou_scores
 
     with open(summary_csv, mode='r') as f:
         reader = csv.DictReader(f)

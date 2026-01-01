@@ -103,7 +103,7 @@ def test(loader, model, folder="saved_images/", device="cuda"):
     model.eval()
     os.makedirs(folder, exist_ok=True)
 
-    for idx, (x, y) in enumerate(loader):
+    for idx, (x, y) in tqdm(enumerate(loader)):
         x, y = x.to(device), y.to(device)
         y = y.float()
 
