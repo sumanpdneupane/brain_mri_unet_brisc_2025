@@ -24,10 +24,13 @@ def load_checkpoint(model, optimizer, foldername="checkpoints", filename="model_
         print(f"Checkpoint '{filepath}' not found. Skipping load.")
         return
 
-    print(f"Loading checkpoint {filepath}")
-    checkpoint = torch.load(filepath) #, map_location="cpu")
+    checkpoint = torch.load(filepath)
     model.load_state_dict(checkpoint["state_dict"])
     optimizer.load_state_dict(checkpoint['optimizer'])
+    last_epoch = checkpoint.get("epoch", 1)
+
+    print(f"Model loaded from {filepath} (last epoch: {last_epoch})")
+    return model, optimizer, checkpoint['epoch']
 
 
 def save_combined_images(original_image, original_mask, pred_mask, overlay, idx, i, folder="saved_images/"):

@@ -2,6 +2,31 @@ import torch
 from sklearn.metrics import roc_curve, auc
 import numpy as np
 
+def count_trainable_params(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+
+def count_total_params(model):
+    return sum(p.numel() for p in model.parameters())
+
+def get_device():
+    if torch.cuda.is_available():
+        device = "cuda"
+        print("Using GPU (CUDA)")
+    elif torch.backends.mps.is_available():
+        device = "mps"
+        print("Using Apple MPS")
+    else:
+        device = "cpu"
+        print("Using CPU")
+    return device
+
+def clean_memory(device="cpu"):
+    if device == "cuda":
+        torch.cuda.empty_cache()
+    elif device == "mps":
+        torch.mps.empty_cache()
+
 
 def crop_tensor(enc_feat, dec_feat):
     """
