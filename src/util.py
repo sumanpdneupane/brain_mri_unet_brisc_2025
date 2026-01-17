@@ -49,7 +49,7 @@ def softmax(x):
     return preds_prob, preds_bin
 
 
-def sigmoid(x, threshold=0.5):
+def sigmoid(x, threshold=0.7):
     # Binary segmentation: for binary: pixel-wise softmax
     preds_prob = torch.sigmoid(x)
     preds_bin = (preds_prob > threshold).float()

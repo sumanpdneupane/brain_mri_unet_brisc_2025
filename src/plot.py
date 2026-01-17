@@ -41,31 +41,37 @@ def plot_dice_and_iou(epochs, dice_scores, iou_scores, figsize=(10, 4)):
         plt.show()
 
 
-def plot_confusion_matrices2(epochs, cms, figsize_per_matrix=(3, 3)):
-    """
-        Plot confusion matrices in a grid (4 per row) and show Accuracy, Precision, Recall, F1 below each matrix.
-        """
-    num_cms = len(cms)
+def plot_confusion_matrices2(epochs, cms, selected_epochs, figsize_per_matrix=(3, 3)):
+    # Filter only the selected epochs
+    filtered = [(ep, cm)
+                for ep, cm in zip(epochs, cms)
+                if ep in selected_epochs]
+
+    num_cms = len(filtered)
     cols = 4
     rows = math.ceil(num_cms / cols)
 
     fig, axes = plt.subplots(rows, cols, figsize=(figsize_per_matrix[0] * cols, figsize_per_matrix[1] * rows))
     axes = axes.flatten()
 
-    for i, cm in enumerate(cms):
-        TP, TN, FP, FN = cm["TP"], cm["TN"], cm["FP"], cm["FN"]
+    for i, (ep, cm) in enumerate(filtered):
+        TP = cm["TP"]
+        TN = cm["TN"]
+        FP = cm["FP"]
+        FN = cm["FN"]
 
         # Compute metrics
-        accuracy = (TP + TN) / (TP + TN + FP + FN) if (TP + TN + FP + FN) > 0 else 0
+        total = TP + TN + FP + FN
+        accuracy = (TP + TN) / total if total > 0 else 0
         precision = TP / (TP + FP) if (TP + FP) > 0 else 0
         recall = TP / (TP + FN) if (TP + FN) > 0 else 0
-        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
 
         matrix = [[TP, FP],
-                  [FN, TN]]
+                      [FN, TN]]
         sns.heatmap(matrix, annot=True, fmt="d", cmap="Blues", cbar=False, ax=axes[i])
 
-        axes[i].set_title(f"Epoch {epochs[i]}")
+        axes[i].set_title(f"Epoch {ep}")
         axes[i].set_xlabel("Predicted")
         axes[i].set_ylabel("Actual")
 
@@ -81,14 +87,20 @@ def plot_confusion_matrices2(epochs, cms, figsize_per_matrix=(3, 3)):
     plt.show()
 
 
-def plot_all_roc_curves(epochs, fprs, tprs, aucs, figsize=(10, 5)):
+def plot_all_roc_curves(epochs, fprs, tprs, aucs, selected_epochs, figsize=(10, 5)):
     """
     Plot all ROC curves in one graph for multiple epochs.
     """
     plt.figure(figsize=figsize)
-    colors = plt.cm.viridis(np.linspace(0, 1, len(epochs)))
 
-    for ep, fpr, tpr, auc_val, color in zip(epochs, fprs, tprs, aucs, colors):
+    # Filter only the selected epochs
+    filtered = [(ep, fpr, tpr, auc_val)
+                for ep, fpr, tpr, auc_val in zip(epochs, fprs, tprs, aucs)
+                if ep in selected_epochs]
+
+    colors = plt.cm.viridis(np.linspace(0, 1, len(filtered)))
+
+    for (ep, fpr, tpr, auc_val), color in zip(filtered, colors):
         if len(fpr) == 0 or len(tpr) == 0:
             continue  # Skip missing data
         plt.plot(fpr, tpr, color=color, label=f"Epoch {ep} (AUC={auc_val:.3f})")
@@ -98,7 +110,7 @@ def plot_all_roc_curves(epochs, fprs, tprs, aucs, figsize=(10, 5)):
     plt.ylim([0.0, 1.05])
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
-    plt.title("ROC Curves per Epoch")
+    plt.title("ROC AUC Curves per Epoch")
     ncol = 2 if len(epochs) <= 10 else 3
     plt.legend(loc="lower right", fontsize="small", ncol=ncol)
     plt.grid(True)
